@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Panchayat Dashboard</title>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin:0;
+  font-family:Poppins, sans-serif;
+  background:#eef2f3;
+}
+header {
+  background:#2b7a78;
+  padding:20px;
+  text-align:center;
+  color:white;
+  font-size:24px;
+}
+
+/* Navigation Buttons */
+nav {
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  background:white;
+  padding:15px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+nav button {
+  background:#3aafa9;
+  color:white;
+  padding:10px 18px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  transition:0.3s;
+}
+nav button:hover { background:#2b7a78; }
+
+/* Sections */
+.section {
+  display:none;
+  background:white;
+  margin:20px;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+.section h2 {
+  margin-top:0;
+}
+
+/* Form Inputs */
+input, select {
+  padding:10px;
+  margin:5px;
+  width:240px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+
+/* Table */
+table {
+  width:100%;
+  border-collapse:collapse;
+  margin-top:15px;
+}
+th, td {
+  padding:12px;
+  border-bottom:1px solid #ddd;
+}
+th {
+  background:#3aafa9;
+  color:white;
+}
+tr:hover{
+  background:#f1f1f1;
+}
+
+/* Buttons */
+button.save {
+  background:#2b7a78;
+  padding:10px 15px;
+  color:white;
+  border:none;
+  border-radius:6px;
+}
+button.save:hover { background:#225c57; }
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>🏡 Village Panchayat Management System</header>
+
+<!-- NAVIGATION -->
+<nav>
+  <!-- <button onclick="openSection('citizens')">👥 Citizens</button> -->
+   <button onclick="window.location.href='citizen.html'"><p>👥Citizen Data</p></button>
+
+  <button onclick="openSection('complaints')">📝 Complaints</button>
+  <button onclick="openSection('tax')">💰 Tax</button>
+
+  <!-- GIS Map Button -->
+  <button onclick="window.location.href='pandharpur_map_fixed2.html'">
+    🗺️ GIS Complaint Map
+  </button>
+</nav>
+
+
+
+<!-- ===================== CITIZEN SECTION ===================== -->
+<div id="citizens" class="section">
+  <h2>👥 Citizen Management</h2>
+
+  <input id="c_name" placeholder="Full Name">
+  <input id="c_aadhaar" placeholder="Aadhaar Number">
+  <input id="c_age" placeholder="Age">
+  <input id="c_address" placeholder="Address">
+  <input id="c_occ" placeholder="Occupation">
+  <button class="save" onclick="addCitizen()">Add Citizen</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th><th>Name</th><th>Aadhaar</th><th>Age</th><th>Address</th><th>Occupation</th>
+      </tr>
+    </thead>
+    <tbody id="citizenTable"></tbody>
+  </table>
+</div>
+
+<!-- ===================== COMPLAINT SECTION ===================== -->
+<div id="complaints" class="section">
+  <h2>📝 Complaints Module</h2>
+
+  <p>To add a complaint on the map, click the button above:  
+     <strong>🗺️ GIS Complaint Map</strong></p>
+
+  <p>You can visually drop a pin on the map and submit your complaint.</p>
+</div>
+
+<!-- ===================== TAX SECTION ===================== -->
+<div id="tax" class="section">
+  <h2>💰 Tax Management</h2>
+
+  <input placeholder="Citizen Name">
+  <input placeholder="Tax Type (House/Water)">
+  <input placeholder="Amount ₹">
+  <select>
+    <option>Not Paid</option>
+    <option>Paid</option>
+  </select>
+  <button class="save">Add Tax</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th><th>Name</th><th>Type</th><th>Amount</th><th>Status</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script>
+// ---------------- SWITCH BETWEEN SECTIONS ----------------
+function openSection(id){
+  document.querySelectorAll('.section').forEach(sec => sec.style.display='none');
+  document.getElementById(id).style.display='block';
+}
+openSection('citizens');
+
+// ---------------- CITIZEN LOGIC ----------------
+let citizens = [];
+let cid = 1;
+
+function addCitizen(){
+  const name = c_name.value;
+  const aadhaar = c_aadhaar.value;
+  const age = c_age.value;
+  const address = c_address.value;
+  const occ = c_occ.value;
+
+  if(!name || !aadhaar){
+    alert("Name and Aadhaar are required!");
+    return;
+  }
+
+  citizens.push({id:cid++, name,aadhaar,age,address,occ});
+  renderCitizen();
+}
+
+function renderCitizen(){
+  let t = document.getElementById("citizenTable");
+  t.innerHTML = "";
+  citizens.forEach(c=>{
+    t.innerHTML += `<tr>
+      <td>${c.id}</td>
+      <td>${c.name}</td>
+      <td>${c.aadhaar}</td>
+      <td>${c.age}</td>
+      <td>${c.address}</td>
+      <td>${c.occ}</td>
+    </tr>`;
+  });
+}
+</script>
+
+</body>
+</html>
